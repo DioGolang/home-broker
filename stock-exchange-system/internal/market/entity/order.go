@@ -46,6 +46,6 @@ func NewOrder(
 		Price:        price,
 		OrderType:    orderType,
 		Status:       "OPEN",
-		Transactions: []*Transactions{},
+		Transactions: []*Transaction{},
 	}
 }
