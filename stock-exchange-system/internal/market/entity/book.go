@@ -29,20 +29,34 @@ func NewBook(orderChan chan *Order, orderChanOut chan *Order, wg *sync.WaitGroup
 }
 
 func (b *Book) Trade() {
-	buyOrders := NewOrderQueue()
-	sellOrders := NewOrderQueue()
+	buyOrders := make(map[string]*OrderQueue)
+	sellOrders := make(map[string]*OrderQueue)
+	//buyOrders := NewOrderQueue()
+	//sellOrders := NewOrderQueue()
 
-	heap.Init(buyOrders)
-	heap.Init(sellOrders)
+	//heap.Init(buyOrders)
+	//heap.Init(sellOrders)
 
 	for order := range b.OrdersChan {
+		asset := order.Asset.ID
+
+		if buyOrders[asset] == nil {
+			buyOrders[asset] = NewOrderQueue()
+			heap.Init(buyOrders[asset])
+		}
+
+		if sellOrders[asset] == nil {
+			sellOrders[asset] = NewOrderQueue()
+			heap.Init(sellOrders[asset])
+		}
+
 		switch order.OrderType {
 		case BuyOrderType:
-			b.processOrder(order, buyOrders, sellOrders, func(o1, o2 *Order) bool {
+			b.processOrder(order, buyOrders[asset], sellOrders[asset], func(o1, o2 *Order) bool {
 				return o2.Price <= o1.Price
 			})
 		case SellOrderType:
-			b.processOrder(order, sellOrders, buyOrders, func(o1, o2 *Order) bool {
+			b.processOrder(order, sellOrders[asset], buyOrders[asset], func(o1, o2 *Order) bool {
 				return o2.Price >= o1.Price
 			})
 		}
