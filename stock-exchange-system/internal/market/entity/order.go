@@ -1,22 +1,22 @@
 package entity
 
-//type Status int
-//
-//const (
-//	Open   Status = iota
-//	Closed
-//)
-//
-//func (s Status) String() string{
-//	switch s {
-//	case Open:
-//		return "OPEN"
-//	case Closed:
-//		return "CLOSED"
-//	default:
-//		return "Unknown Status"
-//	}
-//}
+type Status int
+
+const (
+	Open Status = iota
+	Closed
+)
+
+func (s Status) String() string {
+	switch s {
+	case Open:
+		return "OPEN"
+	case Closed:
+		return "CLOSED"
+	default:
+		return "Unknown Status"
+	}
+}
 
 type Order struct {
 	ID            string
@@ -26,7 +26,7 @@ type Order struct {
 	PendingShares int
 	Price         float64
 	OrderType     string
-	Status        string
+	Status        Status
 	Transactions  []*Transaction
 }
 
@@ -45,7 +45,7 @@ func NewOrder(
 		Shares:       shares,
 		Price:        price,
 		OrderType:    orderType,
-		Status:       "OPEN",
+		Status:       Open,
 		Transactions: []*Transaction{},
 	}
 }

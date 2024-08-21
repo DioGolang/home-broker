@@ -8,7 +8,7 @@ import (
 type Transaction struct {
 	ID           string
 	SellingOrder *Order
-	BuyingOder   *Order
+	BuyingOrder  *Order
 	Shares       int
 	Price        float64
 	Total        float64
@@ -20,10 +20,34 @@ func NewTransaction(sellingOrder *Order, buyingOrder *Order, shares int, price f
 	return &Transaction{
 		ID:           uuid.New().String(),
 		SellingOrder: sellingOrder,
-		BuyingOder:   buyingOrder,
+		BuyingOrder:  buyingOrder,
 		Shares:       shares,
 		Price:        price,
 		Total:        total,
 		Datetime:     time.Now(),
 	}
+}
+
+func (t *Transaction) CalculateTotal(shares int, price float64) {
+	t.Total = float64(t.Shares) * t.Price
+}
+
+func (t *Transaction) CloseBuyOrder() {
+	if t.BuyingOrder.PendingShares == 0 {
+		t.BuyingOrder.Status = Closed
+	}
+}
+
+func (t *Transaction) CloseSellOrder() {
+	if t.SellingOrder.PendingShares == 0 {
+		t.SellingOrder.Status = Closed
+	}
+}
+
+func (t *Transaction) AddBuyOrderPendingShares(shares int) {
+	t.BuyingOrder.PendingShares += shares
+}
+
+func (t *Transaction) AddSellOrderPendingShares(shares int) {
+	t.SellingOrder.PendingShares += shares
 }
