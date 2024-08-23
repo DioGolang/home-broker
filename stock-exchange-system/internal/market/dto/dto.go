@@ -1,5 +1,7 @@
 package dto
 
+import "github.com/DioGolang/home-broker/internal/market/entity"
+
 type TradeInput struct {
 	OrderId       string  `json:"order_id"`
 	InvestorID    string  `json:"investor_id"`
@@ -15,7 +17,7 @@ type OrderOutput struct {
 	InvestorID        string               `json:"investor_id"`
 	AssetID           string               `json:"asset_id"`
 	OrderType         string               `json:"order_type"`
-	Status            string               `json:"status"`
+	Status            entity.Status        `json:"status"`
 	Partial           int                  `json:"partial"`
 	Shares            int                  `json:"shares"`
 	TransactionOutput []*TransactionOutput `json:"transactions"`
